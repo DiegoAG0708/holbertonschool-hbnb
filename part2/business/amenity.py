@@ -1,6 +1,8 @@
-import uuid
+from business.base_model import BaseModel
 
-class Amenity:
+class Amenity(BaseModel):
     def __init__(self, name):
-        self.id = str(uuid.uuid4())
+        super().__init__()
+        if not name:
+            raise ValueError("Amenity must have a name")
         self.name = name
