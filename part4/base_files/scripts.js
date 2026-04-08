@@ -172,6 +172,40 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // --- ADD REVIEW PAGE ---
+    const reviewForm = document.getElementById("review-form");
+    if (reviewForm) {
+        const token = checkAuthenticationReview();
+        const placeId = getPlaceIdFromURL();
+
+        reviewForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const reviewText = document.getElementById("review").value;
+            const rating = document.getElementById("rating").value;
+
+            try {
+                const response = await fetch(`https://tu-api.com/places/${placeId}/reviews`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ comment: reviewText, rating: parseInt(rating, 10) })
+                });
+
+                if (response.ok) {
+                    alert("Review submitted successfully!");
+                    reviewForm.reset();
+                } else {
+                    const errorData = await response.json();
+                    alert("Failed to submit review: " + (errorData.message || response.statusText));
+                }
+            } catch (error) {
+                alert("Error submitting review: " + error.message);
+            }
+        });
+    }
+
     // --- COMMON FUNCTIONS ---
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -183,5 +217,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function getPlaceIdFromURL() {
         const params = new URLSearchParams(window.location.search);
         return params.get("id");
+    }
+
+    function checkAuthenticationReview() {
+        const token = getCookie("token");
+        if (!token) {
+            window.location.href = "index.html";
+        }
+        return token;
     }
 });
