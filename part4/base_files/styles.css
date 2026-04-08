@@ -1,0 +1,97 @@
+/* General reset */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #007BFF;
+  padding: 10px 20px;
+  color: white;
+}
+
+header .logo {
+  height: 40px;
+}
+
+header nav a, .login-button {
+  color: white;
+  margin-left: 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+header nav a:hover, .login-button:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #f2f2f2;
+  margin-top: 20px;
+}
+
+/* Place and review cards */
+.place-card, .review-card {
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fafafa;
+}
+
+.details-button, .add-review button, .login-form button {
+  background-color: #007BFF;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.details-button:hover, .add-review button:hover, .login-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Forms */
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: auto;
+}
+
+form label {
+  margin-top: 10px;
+}
+
+form input, form textarea, form select {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Amenities icons */
+.place-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.place-info li {
+  margin: 5px 0;
+}
+
+.place-info img {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
