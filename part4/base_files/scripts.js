@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    
+    // --- LOGIN PAGE ---
     const loginForm = document.getElementById("login-form");
     if (loginForm) {
         loginForm.addEventListener("submit", async (event) => {
@@ -34,27 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const priceFilter = document.getElementById("price-filter");
 
     if (placesList) {
-        checkAuthentication();
+        checkAuthenticationIndex();
     }
 
-    // --- REVIEW FORM ---
-    const reviewForm = document.getElementById("review-form");
-    if (reviewForm) {
-        reviewForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            alert("Review submitted!");
-        });
-    }
-
-    // --- FUNCTIONS ---
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(";").shift();
-        return null;
-    }
-
-    function checkAuthentication() {
+    function checkAuthenticationIndex() {
         const token = getCookie("token");
         if (!token) {
             if (loginLink) loginLink.style.display = "block";
@@ -68,15 +51,13 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch("https://tu-api.com/places", {
                 method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
+                headers: { "Authorization": `Bearer ${token}` }
             });
 
             if (response.ok) {
                 const places = await response.json();
                 displayPlaces(places);
-                setupFilter(places);
+                setupFilter();
             } else {
                 alert("Failed to fetch places");
             }
@@ -90,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         places.forEach(place => {
             const card = document.createElement("div");
             card.className = "place-card";
-            card.dataset.price = place.price; // para el filtro
+            card.dataset.price = place.price;
 
             card.innerHTML = `
                 <h2>${place.name}</h2>
@@ -102,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function setupFilter(places) {
+    function setupFilter() {
         if (priceFilter) {
             priceFilter.innerHTML = `
                 <option value="all">All</option>
@@ -123,5 +104,84 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             });
         }
+    }
+
+    // --- PLACE PAGE ---
+    const placeDetailsSection = document.getElementById("place-details");
+    const addReviewSection = document.getElementById("add-review");
+
+    if (placeDetailsSection) {
+        const placeId = getPlaceIdFromURL();
+        const token = getCookie("token");
+
+        if (!token) {
+            if (addReviewSection) addReviewSection.style.display = "none";
+        } else {
+            if (addReviewSection) addReviewSection.style.display = "block";
+        }
+
+        fetchPlaceDetails(token, placeId);
+    }
+
+    async function fetchPlaceDetails(token, placeId) {
+        try {
+            const response = await fetch(`https://tu-api.com/places/${placeId}`, {
+                method: "GET",
+                headers: token ? { "Authorization": `Bearer ${token}` } : {}
+            });
+
+            if (response.ok) {
+                const place = await response.json();
+                displayPlaceDetails(place);
+            } else {
+                alert("Failed to fetch place details");
+            }
+        } catch (error) {
+            alert("Error fetching place details: " + error.message);
+        }
+    }
+
+    function displayPlaceDetails(place) {
+        placeDetailsSection.innerHTML = "";
+
+        const info = document.createElement("div");
+        info.className = "place-info";
+        info.innerHTML = `
+            <h2>${place.name}</h2>
+            <p>Host: ${place.host}</p>
+            <p>Price: $${place.price} per night</p>
+            <p>Description: ${place.description}</p>
+            <p>Amenities:</p>
+            <ul>
+                ${place.amenities.map(a => `<li>${a}</li>`).join("")}
+            </ul>
+        `;
+        placeDetailsSection.appendChild(info);
+
+        const reviewsSection = document.getElementById("reviews");
+        reviewsSection.innerHTML = "<h3>Reviews</h3>";
+        place.reviews.forEach(review => {
+            const card = document.createElement("div");
+            card.className = "review-card";
+            card.innerHTML = `
+                <p>"${review.comment}"</p>
+                <p>User: ${review.user}</p>
+                <p>Rating: ${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
+            `;
+            reviewsSection.appendChild(card);
+        });
+    }
+
+    // --- COMMON FUNCTIONS ---
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+        return null;
+    }
+
+    function getPlaceIdFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("id");
     }
 });
