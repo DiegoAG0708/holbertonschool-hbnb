@@ -8,10 +8,14 @@
 </head>
 <body>
     <header>
+        <img src="images/logo.png" alt="App Logo" class="logo">
+        <a href="login.html" class="login-button">Login</a>
         <nav>
-            <a href="login.html" id="login-link">Login</a>
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
         </nav>
     </header>
+
     <main>
         <section id="filter">
             <label for="price-filter">Max Price:</label>
@@ -19,10 +23,25 @@
                 <!-- Options will be populated dynamically -->
             </select>
         </section>
+
         <section id="places-list">
-            <!-- List of places will be populated dynamically -->
+            <div class="place-card">
+                <h2>Beach House</h2>
+                <p>$120 per night</p>
+                <a href="place.html" class="details-button">View Details</a>
+            </div>
+            <div class="place-card">
+                <h2>Mountain Cabin</h2>
+                <p>$90 per night</p>
+                <a href="place.html" class="details-button">View Details</a>
+            </div>
         </section>
     </main>
+
+    <footer>
+        <p>All rights reserved © 2026</p>
+    </footer>
+
     <script src="scripts.js"></script>
 </body>
 </html>
