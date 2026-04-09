@@ -1,4 +1,4 @@
-# HBnB Evolution - Part 4: Simple Web Client
+# HBnB V2 - Part 4: Simple Web Client
 
 ## Overview
 
