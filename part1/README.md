@@ -44,5 +44,3 @@ Manages all data storage and retrieval through repositories. In Part 1 this laye
 - **Place Creation** - POST /places
 - **Review Submission** - POST /reviews
 - **Fetching Places** - GET /places
-
-## Part 1 - Main Contributors: Diego Arcila, Joshua Luja, Luis Jiménez.
