@@ -7,32 +7,59 @@ This part extends the backend with JWT-based authentication, role-based access c
 ## Structure
 
 part3/
+
 ├── app/
+
 │   ├── init.py             - Application Factory (create_app), initializes Flask, SQLAlchemy, Bcrypt, JWTManager
+
 │   ├── api/
+
 │   │   └── v1/
+
 │   │       ├── auth.py         - Login endpoint, JWT token generation
+
 │   │       ├── users.py        - User endpoints with admin and ownership checks
+
 │   │       ├── places.py       - Place endpoints with ownership checks
+
 │   │       ├── reviews.py      - Review endpoints with ownership and duplicate checks
+
 │   │       └── amenities.py    - Amenity endpoints restricted to admins
+
 │   ├── models/
+
 │   │   ├── base_model.py       - SQLAlchemy BaseModel with id, created_at, updated_at
+
 │   │   ├── user.py             - User SQLAlchemy model with bcrypt password hashing
+
 │   │   ├── place.py            - Place SQLAlchemy model with owner and amenity relationships
+
 │   │   ├── review.py           - Review SQLAlchemy model with user and place relationships
+
 │   │   └── amenity.py          - Amenity SQLAlchemy model with place_amenity join table
+
 │   ├── services/
+
 │   │   └── facade.py           - HBnBFacade with separate repositories per entity
+
 │   └── persistence/
+
 │       └── repository.py       - InMemoryRepository and SQLAlchemyRepository classes
+
 ├── config.py                   - Development and production configurations
+
 ├── run.py                      - Application entry point, initializes the database
+
 ├── scripts/
+
 │   ├── schema.sql              - Raw SQL to create all database tables
+
 │   ├── seed.sql                - Raw SQL to insert admin user and default amenities
+
 │   └── seed_admin.py           - Python script to seed the database via SQLAlchemy
+
 └── docs/
+
 └── er_diagram.md           - ER diagram built with mermaid.js
 
 
