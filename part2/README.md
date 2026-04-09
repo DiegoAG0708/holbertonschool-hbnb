@@ -1,44 +1,79 @@
-HBnB Project – Part 2  
-Implementation of Business Logic and API Endpoints
+# HBnB Evolution - Part 2: Business Logic and API Endpoints
 
-📌 Descripción
-En esta parte del proyecto HBnB se inicia la fase de implementación de la aplicación, basada en el diseño realizado en la Parte 1. El enfoque está en construir las capas de Presentación y Lógica de Negocio utilizando Python y Flask, implementando la funcionalidad principal mediante clases, métodos y endpoints que servirán como base para la operación de la aplicación.
+## Overview
 
-En esta etapa se crean las estructuras del proyecto, las clases que definen la lógica de negocio y los endpoints de la API. El objetivo es dar vida a la arquitectura documentada, configurando funcionalidades clave como la creación y gestión de usuarios, lugares, reseñas y amenities, siguiendo buenas prácticas de diseño de APIs.
+This part implements the business logic and RESTful API endpoints using Python and Flask. It brings to life the architecture designed in Part 1, organizing the project into a modular structure with clear separation of responsibilities. Data is stored in memory using an in-memory repository, which is replaced by a real database in Part 3.
 
-🎯 Objetivos
-- Configurar la estructura del proyecto  
-  - Organizar el proyecto en una arquitectura modular.  
-  - Crear paquetes para las capas de Presentación y Lógica de Negocio.  
+## Structure
+part2/
+├── business/
+│   ├── base_model.py       - BaseModel with id, created_at, updated_at
+│   ├── user.py             - User model
+│   ├── place.py            - Place model
+│   ├── review.py           - Review model
+│   └── amenity.py          - Amenity model
+├── facade/
+│   └── hbnb_facade.py      - HBnBFacade connecting all layers
+├── persistence/
+│   └── repository.py       - InMemoryRepository for temporary storage
+├── presentation/
+│   └── api.py              - All API endpoints defined with flask-restx
+├── tests/
+│   └── test_api.py         - Unit tests for the API
+└── app.py                  - Application entry point
 
-- Implementar la Lógica de Negocio 
-  - Desarrollar las clases principales: `User`, `Place`, `Review`, `Amenity`.  
-  - Definir relaciones entre entidades y su interacción.  
-  - Aplicar el patrón **Facade** para simplificar la comunicación entre capas.  
+## Layers
 
-- Construir Endpoints RESTful
-  - Implementar endpoints CRUD para Usuarios, Lugares, Reseñas y Amenities.  
-  - Usar flask-restx para definir y documentar la API.  
-  - Implementar serialización de datos para incluir atributos extendidos (ejemplo: al obtener un `Place`, incluir datos del propietario y amenities relacionados).  
+### Business Logic Layer
+Contains the core models of the application. Each model inherits from BaseModel which provides a unique UUID, creation timestamp, and update timestamp. The models are:
 
-- Probar y validar la API
-  - Verificar que cada endpoint funcione correctamente y maneje casos límite.  
-  - Usar herramientas como Postman o cURL para pruebas.  
+- **User** - Stores first name, last name, email, and password. Owns places and writes reviews.
+- **Place** - Belongs to a User (owner), has a name, description, price, coordinates, and a list of amenities.
+- **Review** - Written by a User for a Place. Contains text and a rating between 1 and 5.
+- **Amenity** - A feature associated with a Place such as WiFi or a Swimming Pool.
 
----
- 🏗️ Alcance del Proyecto
-- Capa de Presentación: Definición de servicios y endpoints con Flask y flask-restx.  
-- Capa de Lógica de Negocio: Construcción de modelos y lógica que impulsan la funcionalidad.  
-- Persistencia: En esta parte se usa un repositorio en memoria. La integración con base de datos (SQLAlchemy) se hará en la Parte 3.  
+### Facade Layer
+The HBnBFacade class acts as the single point of communication between the presentation layer and the persistence layer. It exposes methods for creating, retrieving, listing, and deleting objects without the API layer needing to know about the repository implementation.
 
----
+### Persistence Layer
+The InMemoryRepository stores all objects in a Python dictionary during runtime using the object's UUID as the key. Data is not persisted between sessions. This layer is replaced by SQLAlchemy in Part 3.
 
-📚 Objetivos de Aprendizaje
-- Diseño modular y arquitectura: estructurar aplicaciones Python con separación de responsabilidades.  
-- Desarrollo de APIs con Flask y flask-restx: crear endpoints RESTful bien documentados y escalables.  
-- Implementación de lógica de negocio: traducir diseños documentados en código funcional y mantenible.  
-- Serialización de datos: manejar atributos extendidos y relaciones en respuestas de la API.  
-- Pruebas y depuración: validar endpoints y asegurar respuestas correctas.
+### Presentation Layer
+All CRUD endpoints are defined here using Flask and flask-restx. The API is automatically documented via Swagger UI at `/` when the server is running.
 
-Resultado esperado:  
-Un proyecto organizado, con separación clara de capas, un repositorio en memoria funcional y una aplicación Flask lista para integrar endpoints y lógica.
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/v1/users/ | List all users |
+| POST | /api/v1/users/ | Create a user |
+| GET | /api/v1/users/:id | Get a user by ID |
+| PUT | /api/v1/users/:id | Update a user |
+| GET | /api/v1/places/ | List all places |
+| POST | /api/v1/places/ | Create a place |
+| GET | /api/v1/places/:id | Get a place by ID |
+| PUT | /api/v1/places/:id | Update a place |
+| GET | /api/v1/amenities/ | List all amenities |
+| POST | /api/v1/amenities/ | Create an amenity |
+| GET | /api/v1/amenities/:id | Get an amenity by ID |
+| PUT | /api/v1/amenities/:id | Update an amenity |
+| GET | /api/v1/reviews/ | List all reviews |
+| POST | /api/v1/reviews/ | Create a review |
+| GET | /api/v1/reviews/:id | Get a review by ID |
+| PUT | /api/v1/reviews/:id | Update a review |
+| DELETE | /api/v1/reviews/:id | Delete a review |
+
+## How to Run
+
+```bash
+pip install flask flask-restx
+python app.py
+```
+
+The API will be available at `http://localhost:5000` and the Swagger UI at `http://localhost:5000/`.
+
+## How to Test
+
+```bash
+python -m unittest tests/test_api.py
+```
