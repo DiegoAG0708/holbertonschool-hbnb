@@ -1,32 +1,60 @@
-Part 4 - Simple Web Client
-In this phase, you'll be focusing on the front-end development of your application using HTML5, CSS3, and JavaScript ES6. Your task is to design and implement an interactive user interface that connects with the back-end services you have developed in previous parts of the project.
+# HBnB Evolution - Part 4: Simple Web Client
 
-Objectives
-Develop a user-friendly interface following provided design specifications.
-Implement client-side functionality to interact with the back-end API.
-Ensure secure and efficient data handling using JavaScript.
-Apply modern web development practices to create a dynamic web application.
-Learning Goals
-Understand and apply HTML5, CSS3, and JavaScript ES6 in a real-world project.
-Learn to interact with back-end services using AJAX/Fetch API.
-Implement authentication mechanisms and manage user sessions.
-Use client-side scripting to enhance user experience without page reloads.
-Tasks Breakdown
-Design (Task 1)
-Complete provided HTML and CSS files to match the given design specifications.
-Create pages for Login, List of Places, Place Details, and Add Review.
-Login (Task 2)
-Implement login functionality using the back-end API.
-Store the JWT token returned by the API in a cookie for session management.
-List of Places (Task 3)
-Implement the main page to display a list of all places.
-Fetch places data from the API and implement client-side filtering based on country selection.
-Ensure the page redirects to the login page if the user is not authenticated.
-Place Details (Task 4)
-Implement the detailed view of a place.
-Fetch place details from the API using the place ID.
-Provide access to the add review form if the user is authenticated.
-Add Review (Task 5)
-Implement the form to add a review for a place.
-Ensure the form is accessible only to authenticated users, redirecting others to the index page.
-When testing your client against yout API you'll probably get a Cross-Origin Resource Sharing (CORS) error. You'll need to modify your API code to allow your client to fetch data from the API. Read this article for a depper understanding about CORS and how to configure your Flask API
+## Overview
+
+This part implements the frontend of the HBnB application using HTML5, CSS3, and JavaScript ES6. The web client connects to the backend API developed in Part 3, providing an interactive user interface for browsing places, viewing details, logging in, and submitting reviews. Authentication is managed using JWT tokens stored in cookies.
+
+## Structure
+part4/
+├── base_files/
+│   ├── index.html          - Main page displaying the list of all places with price filter
+│   ├── login.html          - Login page with email and password form
+│   ├── place.html          - Place details page with reviews and add review form
+│   ├── add_review.html     - Standalone add review page for authenticated users
+│   ├── styles.css          - Global stylesheet for all pages
+│   └── scripts.js          - All client-side JavaScript logic
+
+## Pages
+
+### Login (login.html)
+Allows users to log in using their email and password. On successful login, the JWT token returned by the API is stored in a cookie and the user is redirected to the main page.
+
+### List of Places (index.html)
+Displays all available places fetched from the API. Includes a price filter that allows users to filter places client-side by maximum price. Each place card links to its detail page.
+
+### Place Details (place.html)
+Shows the full details of a place including the host, price, description, amenities, and all reviews. If the user is authenticated, the add review form is displayed.
+
+### Add Review (add_review.html)
+A form that allows authenticated users to submit a review for a place. Unauthenticated users are redirected to the main page.
+
+## Key Features
+
+### Authentication
+JWT tokens are stored in cookies after login. All pages check for the token to determine whether the user is authenticated and adjust the UI accordingly.
+
+### Fetch API
+All data is retrieved and submitted using the JavaScript Fetch API with async/await. Requests to protected endpoints include the JWT token in the Authorization header.
+
+### Client-Side Filtering
+The list of places supports filtering by maximum price without making additional API requests. The filter is applied directly to the rendered place cards.
+
+### CORS
+The backend API must be configured to allow cross-origin requests from the frontend. This is required when the client and the API run on different origins.
+
+## How to Run
+
+Open any of the HTML files directly in a browser or serve them with a simple HTTP server:
+
+```bash
+cd part4/base_files
+python -m http.server 8000
+```
+
+Then visit `http://localhost:8000/index.html`.
+
+Make sure the backend from Part 3 is running at `http://localhost:5000` before using the client.
+
+## Dependencies
+
+No external libraries or frameworks are used. The frontend is built entirely with vanilla HTML5, CSS3, and JavaScript ES6.
