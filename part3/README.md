@@ -16,7 +16,7 @@ part3/
 
 │   │   └── v1/
 
-│   │       ├── auth.py         - Login endpoint, JWT token generation
+│   │-------├── auth.py         - Login endpoint, JWT token generation
 
 │   │       ├── users.py        - User endpoints with admin and ownership checks
 
