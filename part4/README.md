@@ -6,7 +6,8 @@ This part implements the frontend of the HBnB application using HTML5, CSS3, and
 
 ## Structure
 part4/
-├── base_files/.
+├── base_files/
+
 │   ├── index.html          - Main page displaying the list of all places with price filter.
 │   ├── login.html          - Login page with email and password form.
 │   ├── place.html          - Place details page with reviews and add review form
