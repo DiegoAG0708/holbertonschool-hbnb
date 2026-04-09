@@ -1,6 +1,18 @@
-HBnB Evolution - Part 1: Technical Documentation Project Overview This repository contains the technical documentation for HBnB Evolution, a simplified AirBnB-like application. 
-In this first phase, we focus on designing the architecture and documenting the system using UML diagrams. 
-The documentation includes: - High-Level Package Diagram - Detailed Class Diagram - Sequence Diagrams - Explanatory Notes 
-Team Members - Diego Arcila - Luis Jimenez - Joshua Luja 
-Contributions We worked collaboratively on the project. 
-Below is a breakdown of contributions:
+# HBnB v2 - Holberton School
+
+Our proyect is a simplified AirBnB-like application built with Python and Flask.
+
+## Project Structure
+
+- `part1/` - Technical documentation and UML diagrams
+- `part2/` - Business logic and API endpoints with in-memory storage
+- `part3/` - Authentication, authorization, and database integration
+- `part4/` - Frontend web client
+
+## Team Members 
+
+- Diego Arcila 
+- Joshua Luja
+- Luis Jiménez
+
+*The contents of this repository were made by Holberton School Mexico students from the Cohort 28 for the proyect HBnB V2*
