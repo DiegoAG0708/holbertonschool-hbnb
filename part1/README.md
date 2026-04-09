@@ -1,4 +1,4 @@
-# HBnB Evolution - Part 1: Technical Documentation
+# HBnB V2 - Part 1: Technical Documentation
 
 ## Overview
 
