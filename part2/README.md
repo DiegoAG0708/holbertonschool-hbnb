@@ -1,4 +1,4 @@
-# HBnB Evolution - Part 2: Business Logic and API Endpoints
+# HBnB V2 - Part 2: Business Logic and API Endpoints
 
 ## Overview
 
