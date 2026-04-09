@@ -5,14 +5,14 @@
 This part implements the frontend of the HBnB application using HTML5, CSS3, and JavaScript ES6. The web client connects to the backend API developed in Part 3, providing an interactive user interface for browsing places, viewing details, logging in, and submitting reviews. Authentication is managed using JWT tokens stored in cookies.
 
 ## Structure
-part4/
+`part4/
 ├── base_files/
 │   ├── index.html          - Main page displaying the list of all places with price filter
 │   ├── login.html          - Login page with email and password form
 │   ├── place.html          - Place details page with reviews and add review form
 │   ├── add_review.html     - Standalone add review page for authenticated users
 │   ├── styles.css          - Global stylesheet for all pages
-│   └── scripts.js          - All client-side JavaScript logic
+│   └── scripts.js          - All client-side JavaScript logic`
 
 ## Pages
 
