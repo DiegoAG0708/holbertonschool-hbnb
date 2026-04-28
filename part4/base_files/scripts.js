@@ -1,5 +1,6 @@
+const API_URL = "https://holbertonschool-hbnbv2-team.onrender.com";
+
 document.addEventListener("DOMContentLoaded", () => {
-    // --- LOGIN PAGE ---
     const loginForm = document.getElementById("login-form");
     if (loginForm) {
         loginForm.addEventListener("submit", async (event) => {
@@ -8,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const password = document.getElementById("password").value;
 
             try {
-                const response = await fetch("https://tu-api.com/login", {
+                const response = await fetch(`${API_URL}/api/v1/auth/login`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email, password })
@@ -28,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- INDEX PAGE ---
     const loginLink = document.getElementById("login-link");
     const placesList = document.getElementById("places-list");
     const priceFilter = document.getElementById("price-filter");
@@ -43,15 +43,18 @@ document.addEventListener("DOMContentLoaded", () => {
             if (loginLink) loginLink.style.display = "block";
         } else {
             if (loginLink) loginLink.style.display = "none";
-            fetchPlaces(token);
         }
+        fetchPlaces(token);
     }
 
     async function fetchPlaces(token) {
         try {
-            const response = await fetch("https://tu-api.com/places", {
+            const headers = {};
+            if (token) headers["Authorization"] = `Bearer ${token}`;
+
+            const response = await fetch(`${API_URL}/api/v1/places/`, {
                 method: "GET",
-                headers: { "Authorization": `Bearer ${token}` }
+                headers: headers
             });
 
             if (response.ok) {
@@ -87,9 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (priceFilter) {
             priceFilter.innerHTML = `
                 <option value="all">All</option>
-                <option value="10">10</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
+                <option value="10">$10</option>
+                <option value="50">$50</option>
+                <option value="100">$100</option>
+                <option value="200">$200</option>
             `;
             priceFilter.addEventListener("change", (event) => {
                 const maxPrice = event.target.value;
@@ -106,8 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- PLACE PAGE ---
-    const placeDetailsSection = document.getElementById("place-details");
+    const placeDetailsSection = document.querySelector(".place-info");
     const addReviewSection = document.getElementById("add-review");
 
     if (placeDetailsSection) {
@@ -125,9 +128,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchPlaceDetails(token, placeId) {
         try {
-            const response = await fetch(`https://tu-api.com/places/${placeId}`, {
+            const headers = {};
+            if (token) headers["Authorization"] = `Bearer ${token}`;
+
+            const response = await fetch(`${API_URL}/api/v1/places/${placeId}`, {
                 method: "GET",
-                headers: token ? { "Authorization": `Bearer ${token}` } : {}
+                headers: headers
             });
 
             if (response.ok) {
@@ -142,37 +148,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function displayPlaceDetails(place) {
-        placeDetailsSection.innerHTML = "";
-
-        const info = document.createElement("div");
-        info.className = "place-info";
-        info.innerHTML = `
+        placeDetailsSection.innerHTML = `
             <h2>${place.name}</h2>
-            <p>Host: ${place.host}</p>
             <p>Price: $${place.price} per night</p>
-            <p>Description: ${place.description}</p>
+            <p>Description: ${place.description || ""}</p>
             <p>Amenities:</p>
             <ul>
-                ${place.amenities.map(a => `<li>${a}</li>`).join("")}
+                ${place.amenities.map(a => `<li>${a.name}</li>`).join("")}
             </ul>
         `;
-        placeDetailsSection.appendChild(info);
 
         const reviewsSection = document.getElementById("reviews");
-        reviewsSection.innerHTML = "<h3>Reviews</h3>";
-        place.reviews.forEach(review => {
-            const card = document.createElement("div");
-            card.className = "review-card";
-            card.innerHTML = `
-                <p>"${review.comment}"</p>
-                <p>User: ${review.user}</p>
-                <p>Rating: ${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
-            `;
-            reviewsSection.appendChild(card);
-        });
+        if (reviewsSection) {
+            reviewsSection.innerHTML = "<h3>Reviews</h3>";
+            if (place.reviews && place.reviews.length > 0) {
+                place.reviews.forEach(review => {
+                    const card = document.createElement("div");
+                    card.className = "review-card";
+                    card.innerHTML = `
+                        <p>"${review.text}"</p>
+                        <p>Rating: ${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
+                    `;
+                    reviewsSection.appendChild(card);
+                });
+            } else {
+                reviewsSection.innerHTML += "<p>No reviews yet.</p>";
+            }
+        }
     }
 
-    // --- ADD REVIEW PAGE ---
     const reviewForm = document.getElementById("review-form");
     if (reviewForm) {
         const token = checkAuthenticationReview();
@@ -180,17 +184,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         reviewForm.addEventListener("submit", async (event) => {
             event.preventDefault();
-            const reviewText = document.getElementById("review").value;
+            const reviewText = document.getElementById("review-text") || document.getElementById("review");
             const rating = document.getElementById("rating").value;
 
             try {
-                const response = await fetch(`https://tu-api.com/places/${placeId}/reviews`, {
+                const response = await fetch(`${API_URL}/api/v1/reviews/`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     },
-                    body: JSON.stringify({ comment: reviewText, rating: parseInt(rating, 10) })
+                    body: JSON.stringify({
+                        text: reviewText.value,
+                        rating: parseInt(rating, 10),
+                        user_id: getCookie("user_id"),
+                        place_id: placeId
+                    })
                 });
 
                 if (response.ok) {
@@ -198,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     reviewForm.reset();
                 } else {
                     const errorData = await response.json();
-                    alert("Failed to submit review: " + (errorData.message || response.statusText));
+                    alert("Failed to submit review: " + (errorData.error || response.statusText));
                 }
             } catch (error) {
                 alert("Error submitting review: " + error.message);
@@ -206,7 +215,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- COMMON FUNCTIONS ---
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
