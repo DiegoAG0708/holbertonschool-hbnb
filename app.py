@@ -9,10 +9,9 @@ api = Api(
     version="1.0",
     title="HBnB API",
     description="HBnB Business Logic API",
-    doc=False  # 👈 ESTA LÍNEA ES LA CLAVE
+    doc=False 
 )
 
-# Register all namespaces
 api.add_namespace(api_ns, path="/api/v1/users")
 api.add_namespace(amenity_ns, path="/api/v1/amenities")
 api.add_namespace(place_ns, path="/api/v1/places")
