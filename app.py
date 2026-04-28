@@ -3,11 +3,13 @@ from flask_restx import Api
 from presentation.api import api_ns, amenity_ns, place_ns, review_ns
 
 app = Flask(__name__)
+
 api = Api(
     app,
     version="1.0",
     title="HBnB API",
-    description="HBnB Business Logic API"
+    description="HBnB Business Logic API",
+    doc=False  # 👈 ESTA LÍNEA ES LA CLAVE
 )
 
 # Register all namespaces
